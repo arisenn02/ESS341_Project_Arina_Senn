@@ -1,1 +1,0 @@
-Panda, shapely,geopandas, matplotlib, contextily cmcrameri gdown cftime cartopy pooch h5netcdf netCDF4 hvplot jupyter_bokeh rioxarray geoviews
