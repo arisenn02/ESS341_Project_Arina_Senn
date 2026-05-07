@@ -29,5 +29,4 @@ def plot_category_over_a_year(data,categories,year):
     ax.set_ylabel("Number of Reports")
     ax.set_title("Monthly Reports by Category over a Year")
     ax.legend(loc="upper left",)
-
     plt.show()
