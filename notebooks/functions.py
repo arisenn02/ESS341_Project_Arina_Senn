@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 def plot_category_over_years(data,categories):
     data = data.set_index("report_time")
     fig, ax = plt.subplots()
@@ -30,3 +31,13 @@ def plot_category_over_a_year(data,categories,year):
     ax.set_title("Monthly Reports by Category over a Year")
     ax.legend(loc="upper left",)
     plt.show()
+
+def calculate_mean_processing_time(data,categories):
+    for category in categories:
+        filter_category= data[data["category"]==category]
+        filter_category["processing_time"] =  filter_category["resolved_time"]- filter_category["report_time"]
+        mean = (filter_category.groupby(["Quartier"])["processing_time"].mean().reset_index())
+        mean["processing_time_float"]= mean["processing_time"].dt.total_seconds()/86400
+        
+    return mean
+        
