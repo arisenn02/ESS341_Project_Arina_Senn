@@ -7,14 +7,13 @@ def plot_category_over_years(data,categories,time_column,category_column):
     for cat in categories:
         filtered_data = data[data[category_column]==cat]
         monthly_reports = filtered_data.resample("ME").size().reset_index(name="reports")
-        ax.plot(monthly_reports[time_column], monthly_reports["reports"],color=colors[i],label = category,)
+        ax.plot(monthly_reports[time_column], monthly_reports["reports"],color=colors[i],label = cat,)
         i+=1
     ax.set_xlabel("Time [Year]")
     ax.set_ylabel("Number of Reports")
     ax.set_title("Monthly Reports by Category over Years")
-    ax.legend()
+    ax.legend() 
     plt.show()
-
 
 def plot_category_over_a_year(data,categories,time_column, category_column,year):
     data = data.set_index(time_column)
@@ -33,12 +32,9 @@ def plot_category_over_a_year(data,categories,time_column, category_column,year)
     ax.legend(loc="upper left",)
     plt.show()
 
-def calculate_mean_processing_time(data,categories):
-    for category in categories:
-        filter_category= data[data["category"]==category]
-        filter_category["processing_time"] =  filter_category["resolved_time"]- filter_category["report_time"]
-        mean = (filter_category.groupby(["Quartier"])["processing_time"].mean().reset_index())
-        mean["processing_time_float"]= mean["processing_time"].dt.total_seconds()/86400
-        
+def calculate_mean_processing_time(data,category):
+    filter_category = data[data["category"] == category].copy()
+    filter_category["processing_time"] = (filter_category["resolved_time"] - filter_category["report_time"])
+    mean = (filter_category.groupby("Quartier")["processing_time"].mean().reset_index())
+    mean["processing_time_float"] = (mean["processing_time"].dt.total_seconds() / 86400)
     return mean
-        
