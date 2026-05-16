@@ -33,12 +33,13 @@ def plot_category_over_a_year(data,categories,time_column, category_column,year)
     ax.legend(loc="upper left",)
     plt.show()
 
-def calculate_mean_processing_time(data,category):
-    filter_category = data[data["category"] == category].copy()
-    filter_category["processing_time"] = (filter_category["resolved_time"] - filter_category["report_time"])
-    mean = (filter_category.groupby("Quartier")["processing_time"].mean().reset_index())
-    mean["processing_time_float"] = (mean["processing_time"].dt.total_seconds() / 86400)
-    return mean
+def calculate_mean_processing_time(data,category,category_col="Category",report_col="Report_time",
+                                   resolved_col="Resolved_time",boundary_col="Neighborhoods"):
+    filter_category = data[data[category_col] == category].copy()
+    filter_category["processing_time"] = (filter_category[resolved_col] - filter_category[report_col])
+    mean_days = (filter_category.groupby(boundary_col)["processing_time"].mean().reset_index())
+    mean_days["processing_time_days"] = (mean_days["processing_time"].dt.total_seconds() / 86400)
+    return mean_days
 
 def clean_legend_labels(ax):
     legend = ax.get_legend()
