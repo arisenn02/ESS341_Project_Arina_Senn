@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import mapclassify
 def plot_category_over_years(data,categories,time_column,category_column):
     data = data.set_index(time_column)
     fig, ax = plt.subplots()
@@ -38,3 +39,33 @@ def calculate_mean_processing_time(data,category):
     mean = (filter_category.groupby("Quartier")["processing_time"].mean().reset_index())
     mean["processing_time_float"] = (mean["processing_time"].dt.total_seconds() / 86400)
     return mean
+
+def clean_legend_labels(ax):
+    legend = ax.get_legend()
+    for text in legend.get_texts():
+        text.set_text(text.get_text().replace(",", "  -"))
+
+def add_labels_zurich(ax, data, column_boundary="Neighborhoods", column_geometry="Geometry", names=None):
+    selected_quartiere =data[data["Neighborhoods"].isin(names)]
+    for i in range(len(selected_quartiere)):
+        x = selected_quartiere.iloc[i][column_geometry].centroid.x
+        y = selected_quartiere.iloc[i][column_geometry].centroid.y
+        name = selected_quartiere.iloc[i][column_boundary]
+        
+        ax.text(x, y, name, fontsize=7, fontweight="light")
+
+def histogram_natural_breaks(data, column,k):
+    classifier = mapclassify.NaturalBreaks(data[column],k=k)
+    breaks = classifier.bins
+    
+    plt.figure(figsize=(10,5))
+    plt.hist(data[column], bins=100, color= "grey",edgecolor="black")
+    
+    for i in breaks:
+        plt.axvline(i, color="red", linestyle="--")
+
+    plt.title(f"Distribution of {column} with Natural Breaks")
+    plt.xlabel(column)
+    plt.ylabel("Frequency")
+
+    plt.show()
