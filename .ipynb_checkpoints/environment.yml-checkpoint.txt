@@ -1,1 +1,0 @@
-Panda, shapely,geopandas, matplotlib,cmcrameri
