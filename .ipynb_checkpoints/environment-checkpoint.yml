@@ -1,0 +1,14 @@
+name: ess341_projekt
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - jupyterlab
+  - geopandas
+  - mapclassify
+  - pyproj
+  - matplotlib
+  - ipykernel
+  - pandas
+  - numpy
+  - shapely
