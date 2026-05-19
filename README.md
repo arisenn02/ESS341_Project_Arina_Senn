@@ -7,15 +7,15 @@ The analysis focuses in particular on the service category "Abfall/Sammelstelle"
 - Zurich Open Data Portal: https://data.stadt-zuerich.ch/dataset/geo_statistische_quartiere
 - Zurich Open Data Portal: https://data.stadt-zuerich.ch/dataset/bev_bestand_jahr_statzone_od3241
 
-The reports and statistical neighborhood dataset were downloaded on the 24.04.2026.
+The reports and statistical neighborhood dataset were downloaded on the 24.04.2026. \
 The population dataset was downloaded on 11.05.2026
 
 ## Repository structure
-data/raw/ -> raw datasets
-data/processed/ -> processed datasets
-notebooks/ -> Jupyter Notebook
-outputs/ -> exported figures and maps
-environment -> file with required python packages
+data/raw/ -> raw datasets \
+data/processed/ -> processed datasets \
+notebooks/ -> Jupyter Notebook \
+outputs/ -> exported figures and maps \
+environment -> file with required python packages 
 
 ## Setup Instructions
 This project requires Python 3.11.15.
