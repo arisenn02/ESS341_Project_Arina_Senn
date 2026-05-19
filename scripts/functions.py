@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import mapclassify
 
-
-
-def plot_category_over_years(data,categories,time_column = "Report_time", category_column="Category"):
+def plot_category_over_years(
+    data,
+    categories,
+    time_column = "Report_time", 
+    category_column="Category"):
     """ 
     Plot the monthly number of reports for multiple categories over time.
 
@@ -28,17 +30,34 @@ def plot_category_over_years(data,categories,time_column = "Report_time", catego
 
     Example
     --------
-    plot_category_over_years(data = df), categories =["Graffiti,"Abfall/Sammelstelle"], time_column = "reported_time", category_column = "service_name")
+    plot_category_over_years(data = df,
+        categories =["Graffiti,"Abfall/Sammelstelle"], 
+        time_column = "reported_time",
+        category_column = "service_name")
     """
     data = data.set_index(time_column)
     fig, ax = plt.subplots()
-    colors=["steelblue","seagreen","sandybrown","mediumpurple","lightcoral","cadetblue","rosybrown","darkseagreen","tan","plum"]
+    colors=["steelblue", "seagreen",
+            "sandybrown","mediumpurple",
+            "lightcoral","cadetblue",
+            "rosybrown","darkseagreen",
+            "tan","plum"]
     i=0
     
     for cat in categories:
         filtered_data = data[data[category_column]==cat]
-        monthly_reports = filtered_data.resample("ME").size().reset_index(name="reports")
-        ax.plot(monthly_reports[time_column], monthly_reports["reports"],color=colors[i],label = cat,)
+        monthly_reports = (
+            filtered_data
+                .resample("ME")
+                .size()
+                .reset_index(name="reports"))
+        
+        ax.plot( 
+            monthly_reports[time_column], 
+            monthly_reports["reports"],
+            color=colors[i],
+            label = cat,)
+        
         i+=1
         
     ax.set_xlabel("Time [Year]")
@@ -48,12 +67,19 @@ def plot_category_over_years(data,categories,time_column = "Report_time", catego
     
     plt.show()
 
+    return fig
+
 
     
 
-def plot_category_over_a_year(data,categories,year,time_column ="Report_time", category_column="Category"):
+def plot_category_over_a_year( 
+    data,
+    categories,
+    year,
+    time_column ="Report_time",
+    category_column="Category"):
     """
-    Plot the monthly number of reports for multiple categories within a specific year.
+    Plot the monthly number of reports for categories within a specific year.
 
     Parameters
     ----------
@@ -76,36 +102,62 @@ def plot_category_over_a_year(data,categories,year,time_column ="Report_time", c
     Returns
     -------
     None
-        Displays a line plot of the monthly reports counts per category for the selected year.
+        Displays a line plot of the monthly reports counts per category 
+        for the selected year.
 
     Example
     -------
-     plot_category_over_a_year(data = df), categories =["Graffiti,"Abfall/Sammelstelle"],year=2025, time_column ="reported_at", category_column ="service_name")
+     plot_category_over_a_year(data = df, 
+     categories =["Graffiti,"Abfall/Sammelstelle"],
+     year=2025, 
+     time_column ="reported_at", 
+     category_column ="service_name")
     """
 
     data = data.set_index(time_column)
     fig, ax = plt.subplots()
-    colors=["steelblue","seagreen","sandybrown","mediumpurple","lightcoral","cadetblue","rosybrown","darkseagreen","tan","plum"]
+    colors=["steelblue","seagreen",
+            "sandybrown","mediumpurple",
+            "lightcoral","cadetblue",
+            "rosybrown","darkseagreen",
+            "tan","plum"]
     i=0
 
     for cat in categories:
         filtered_data = data[data[category_column]==cat]
-        report_year = filtered_data[filtered_data.index.year == year]
-        monthly_reports = report_year.resample("ME").size().reset_index(name="reports")
-        ax.plot(monthly_reports[time_column], monthly_reports["reports"],"o-",color=colors[i],label=cat,)
+        report_year =( 
+            filtered_data[filtered_data.index.year == year])
+        monthly_reports =( 
+            report_year.resample("ME")
+                .size().
+                reset_index(name="reports"))
+        
+        ax.plot(
+            monthly_reports[time_column],
+            monthly_reports["reports"],
+            "o-",
+            color=colors[i],
+            label=cat,)
         i+=1
         
     ax.set_xlabel("Time [Month]")
     ax.set_ylabel("Number of Reports")
     ax.set_title("Monthly Reports by Category over a Year")
     ax.legend(loc="upper left",)
+    
     plt.show()
+
+    return fig
 
 
     
 
-def calculate_mean_processing_time(data,category,category_col="Category",report_col="Report_time",
-                                   resolved_col="Resolved_time",boundary_col="Neighborhoods"):
+def calculate_mean_processing_time(
+    data,
+    category,
+    category_col="Category",
+    report_col="Report_time",resolved_col="Resolved_time",
+    boundary_col="Neighborhoods"):
     """
     Calculate the mean processing time per neighborhood for a given category.
 
@@ -136,16 +188,29 @@ def calculate_mean_processing_time(data,category,category_col="Category",report_
 
     Examples
     --------
-    calculate_mean_processing_time(data=df, category = "Abfall,Sammelstelle", 
-                                    category_col = "service_name", 
-                                    report_col ="reported_at", resolved_col = "resolved_at", 
-                                    boundary_col = "Neighborhoods")
+    calculate_mean_processing_time(
+        data=df, 
+        category = "Abfall,Sammelstelle", 
+        category_col = "service_name", 
+        report_col ="reported_at", 
+        resolved_col = "resolved_at", 
+        boundary_col = "Neighborhoods")
     """
-    filter_category = data[data[category_col] == category].copy()
-    filter_category["processing_time"] = (filter_category[resolved_col] - filter_category[report_col])
+    filter_category = (
+        data[data[category_col] == category].copy())
     
-    mean_days = (filter_category.groupby(boundary_col)["processing_time"].mean().reset_index())
-    mean_days["processing_time_days"] = (mean_days["processing_time"].dt.total_seconds() / 86400)
+    filter_category["processing_time"] = (
+        filter_category[resolved_col] 
+        - filter_category[report_col])
+    
+    mean_days =(
+    filter_category
+    .groupby(boundary_col)["processing_time"]
+    .mean().reset_index())
+    
+    mean_days["processing_time_days"] = (
+        mean_days["processing_time"]
+        .dt.total_seconds() / 86400)
     
     return mean_days
 
@@ -173,7 +238,12 @@ def clean_legend_labels(ax):
 
         
 
-def add_labels_zurich(ax, data, column_boundary="Neighborhoods", column_geometry="Geometry", names=None):
+def add_labels_zurich(
+    ax,
+    data,
+    column_boundary="Neighborhoods",
+    column_geometry="Geometry",
+    names=None):
     """ 
     Add labels for selected Zurich neighborhoods
     
@@ -201,9 +271,13 @@ def add_labels_zurich(ax, data, column_boundary="Neighborhoods", column_geometry
 
     Example
     -------
-    add_labels_zurich(ax=ax, data = gdf, names=["Altstetten","Oerlikon","City"])
+    add_labels_zurich(ax=ax,
+    data = gdf, 
+    names=["Altstetten","Oerlikon","City"])
     """
-    selected_quartiere =data[data["Neighborhoods"].isin(names)]
+    selected_quartiere =(
+        data[data["Neighborhoods"]
+            .isin(names)])
     
     for i in range(len(selected_quartiere)):
         x = selected_quartiere.iloc[i][column_geometry].centroid.x
@@ -217,7 +291,8 @@ def add_labels_zurich(ax, data, column_boundary="Neighborhoods", column_geometry
 
 def histogram_natural_breaks(data, column,k):
     """
-    Plot a histogram of a numeric column and add Natural Breaks class boundaries.
+    Plot a histogram of a numeric column and 
+    add Natural Breaks class boundaries.
 
     Parameters
     ----------
@@ -233,20 +308,30 @@ def histogram_natural_breaks(data, column,k):
     Returns
     -------
     None
-        Displays a histogram plot with vertical lines which are indicating breaks..
+        Displays a histogram plot with vertical lines 
+        which are indicating breaks.
 
     Examples
     --------
-    histogram_natural_breaks(df, column ="processing_time",k=5)
+    histogram_natural_breaks(df,
+    column ="processing_time",
+    k=5)
     """
     classifier = mapclassify.NaturalBreaks(data[column],k=k)
     breaks = classifier.bins
     
     plt.figure(figsize=(10,5))
-    plt.hist(data[column], bins=100, color= "grey",edgecolor="black")
+    plt.hist(
+        data[column],
+        bins=100, 
+        color= "grey",
+        edgecolor="black")
     
     for i in breaks:
-        plt.axvline(i, color="red", linestyle="--")
+        plt.axvline(
+        i, 
+        color="red", 
+        linestyle="--")
 
     plt.title(f"Distribution of {column} with Natural Breaks")
     plt.xlabel(column)
