@@ -25,7 +25,7 @@ def plot_category_over_years(
 
     Returns
     -------
-    None
+    Figure
         Displays a line plot of the monthly reports counts per category.
 
     Example
@@ -101,7 +101,7 @@ def plot_category_over_a_year(
 
     Returns
     -------
-    None
+    figure
         Displays a line plot of the monthly reports counts per category 
         for the selected year.
 
@@ -317,8 +317,8 @@ def histogram_natural_breaks(data, column,k):
     column ="processing_time",
     k=5)
     """
-    classifier = mapclassify.NaturalBreaks(data[column],k=k)
-    breaks = classifier.bins
+    classified_object = mapclassify.NaturalBreaks(data[column],k=k)
+    breaks = classified_object.bins
     
     plt.figure(figsize=(10,5))
     plt.hist(
